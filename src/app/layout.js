@@ -5,8 +5,8 @@ import { Toaster } from 'react-hot-toast'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Sistema de Gestión de Turnos',
-  description: 'Sistema simple y eficiente para la gestión de turnos hospitalarios',
+  title: 'Turnero Policlínica Tafí Viejo',
+  description: 'Sistema de gestion de turnos para Policlinca Tafí Viejo',
 }
 
 export default function RootLayout({ children }) {

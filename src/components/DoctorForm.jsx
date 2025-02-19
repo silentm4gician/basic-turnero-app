@@ -5,10 +5,11 @@ import { toast } from 'react-hot-toast'
 export default function DoctorForm({ initialData, onSuccessfulSubmit }) {
   const [name, setName] = useState('')
   const [specialty, setSpecialty] = useState('')
-  const { addDoctor, updateDoctor } = useTurnStore((state) => ({
+  const { addDoctor, updateDoctor} = useTurnStore((state) => ({
     addDoctor: state.addDoctor,
     updateDoctor: state.updateDoctor
   }))
+  const broadcastRefresh = useTurnStore.getState().broadcastRefresh
 
   useEffect(() => {
     if (initialData) {
@@ -38,9 +39,11 @@ export default function DoctorForm({ initialData, onSuccessfulSubmit }) {
       
       if (initialData) {
         updateDoctor(doctor)
+        broadcastRefresh()
         toast.success('Doctor actualizado exitosamente')
       } else {
         addDoctor(doctor)
+        broadcastRefresh()
         toast.success('Doctor agregado exitosamente')
       }
 

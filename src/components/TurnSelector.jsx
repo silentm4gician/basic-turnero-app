@@ -4,7 +4,8 @@ import useTurnStore from '@/store/turnStore'
 export default function TurnSelector() {
   const [selectedDoctor, setSelectedDoctor] = useState('')
   const [message, setMessage] = useState('')
-  const { doctors, setDoctors, updateDoctorTurn } = useTurnStore()
+  const { doctors, setDoctors, updateDoctorTurn, broadcastRefresh } = useTurnStore()
+  const [localDoctors, setLocalDoctors] = useState([])
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -13,11 +14,42 @@ export default function TurnSelector() {
         if (!response.ok) throw new Error('Failed to fetch doctors')
         const data = await response.json()
         setDoctors(data)
+        setLocalDoctors(data)
       } catch (error) {
         console.error('Error fetching doctors:', error)
       }
     }
-    fetchDoctors()
+    const handleRefresh = () => {
+      console.log('Refresh event received')
+      fetchDoctors()
+    }
+
+    // Only add event listeners on client side
+    if (typeof window !== 'undefined') {
+      console.log('Adding event listeners')
+      
+      // Custom event listener
+      window.addEventListener('doctors-refresh', handleRefresh)
+      
+      // localStorage event listener
+      const handleStorageRefresh = (event) => {
+        if (event.key === 'doctors-refresh') {
+          console.log('Refresh triggered by localStorage event')
+          fetchDoctors()
+        }
+      }
+      window.addEventListener('storage', handleStorageRefresh)
+
+      // Initial fetch
+      fetchDoctors()
+
+      // Cleanup listeners
+      return () => {
+        console.log('Removing event listeners')
+        window.removeEventListener('doctors-refresh', handleRefresh)
+        window.removeEventListener('storage', handleStorageRefresh)
+      }
+    }
   }, [setDoctors])
 
   const handleTurnRequest = async () => {
@@ -32,6 +64,8 @@ export default function TurnSelector() {
       
       const doctor = await response.json()
       updateDoctorTurn(doctor.id, doctor.currentTurn)
+      console.log('Broadcasting refresh event')
+      broadcastRefresh() // Broadcast refresh event
       setMessage(`Turno N°${doctor.currentTurn} para Dr. ${doctor.name}`)
     } catch (error) {
       console.error('Error getting turn:', error)
@@ -52,7 +86,7 @@ export default function TurnSelector() {
           className="form-input rounded-md w-full"
         >
           <option value="">Seleccione un doctor</option>
-          {doctors.map((doctor) => (
+          {localDoctors.map((doctor) => (
             <option key={doctor.id} value={doctor.id}>
               Dr. {doctor.name} - {doctor.specialty}
             </option>

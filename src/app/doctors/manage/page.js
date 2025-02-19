@@ -10,6 +10,7 @@ import { toast } from 'react-hot-toast'
 
 export default function DoctorManagement() {
   const { doctors, setDoctors, resetAllTurns, updateDoctorTurn } = useTurnStore()
+  const [localDoctors, setLocalDoctors] = useState([])
   const [editingDoctor, setEditingDoctor] = useState(null)
 
   useEffect(() => {
@@ -19,6 +20,7 @@ export default function DoctorManagement() {
         if (!response.ok) throw new Error('Failed to fetch doctors')
         const data = await response.json()
         setDoctors(data)
+        setLocalDoctors(data)
       } catch (error) {
         console.error('Error fetching doctors:', error)
         toast.error('No se pudieron cargar los doctores')
@@ -94,23 +96,29 @@ export default function DoctorManagement() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-cyan-50 p-8">
       <div className="container mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-center mb-8 text-center">
           <h1 className="text-4xl font-bold text-cyan-900">
             Gestión de Doctores
           </h1>
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-col lg:flex-row items-center space-y-1 mt-4 lg:space-x-2">
             <button 
               onClick={handleResetAllTurns}
-              className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium flex items-center space-x-2"
+              className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium flex items-center"
             >
-              <RotateCcw size={16} />
-              <span>Reiniciar Todos los Turnos</span>
+              {/* <RotateCcw size={16} /> */}
+              <span>Reiniciar Turnos</span>
             </button>
+            <Link 
+              href="/turnos/nuevo" 
+              className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-center"
+            >
+              Dar Turnos
+            </Link>
             <Link 
               href="/" 
               className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium"
             >
-              Ver Turnos
+              Inicio
             </Link>
           </div>
         </div>
@@ -140,11 +148,11 @@ export default function DoctorManagement() {
               <h2 className="text-2xl font-semibold text-cyan-800 mb-6">
                 Doctores Registrados
               </h2>
-              {doctors.length === 0 ? (
+              {localDoctors.length === 0 ? (
                 <p className="text-gray-500 text-center">No hay doctores registrados</p>
               ) : (
                 <div className="space-y-4">
-                  {doctors.map((doctor) => (
+                  {doctors?.map((doctor) => (
                     <div 
                       key={doctor.id} 
                       className="flex justify-between items-center p-4 bg-cyan-50 rounded-lg"
