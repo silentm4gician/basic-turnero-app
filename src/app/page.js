@@ -8,10 +8,25 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-cyan-50 p-8">
       <div className="container mx-auto max-w-[1000px]">
-        <div className="flex flex-col lg:flex-row justify-between items-center pb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-center">
           <h1 className="text-4xl font-bold text-cyan-900">
-            Turnos Actuales
+            Policlínica Tafí Viejo
           </h1>
+          <img
+          src="/logo.png"
+          alt="Logo"
+          className="w-24 h-24"
+          />
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6 border border-cyan-100">
+          <DoctorList />
+        </div>
+
+        <div className="flex flex-col lg:flex-row justify-between items-center pb-8">
+          {/* <h1 className="text-4xl font-bold text-cyan-900">
+            Turnos Actuales
+          </h1> */}
           <div className="flex gap-4 mt-8">
           <Link
             href="/doctors/manage"
@@ -26,10 +41,6 @@ export default function Home() {
             Dar Turnos
           </Link>
           </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6 border border-cyan-100">
-          <DoctorList />
         </div>
 
         {/* <div className="mt-8 bg-white rounded-xl shadow-lg p-6 border border-cyan-100">

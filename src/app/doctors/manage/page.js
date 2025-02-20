@@ -9,7 +9,7 @@ import { Trash2, Edit2, Trash2Icon, RotateCcw } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 
 export default function DoctorManagement() {
-  const { doctors, setDoctors, resetAllTurns, updateDoctorTurn } = useTurnStore()
+  const { doctors, setDoctors, resetAllTurns, updateDoctorTurn , broadcastRefresh} = useTurnStore()
   const [localDoctors, setLocalDoctors] = useState([])
   const [editingDoctor, setEditingDoctor] = useState(null)
 
@@ -43,6 +43,7 @@ export default function DoctorManagement() {
       
       const updatedDoctors = doctors.filter(doctor => doctor.id !== doctorId)
       setDoctors(updatedDoctors)
+      broadcastRefresh()
       toast.success('Doctor eliminado exitosamente')
     } catch (error) {
       console.error('Error deleting doctor:', error)
