@@ -9,7 +9,10 @@ const TurnosManage = () => {
 
   useEffect(() => {
     const fetchTurnos = async () => {
-      const dni = localStorage.getItem("dni");
+      console.log('MANAGE')
+      // Safely check for localStorage
+      const dni = typeof window !== 'undefined' ? localStorage.getItem("dni") : null;
+      
       if (!dni) {
         navigate.push("/");
         return;
@@ -31,31 +34,31 @@ const TurnosManage = () => {
     fetchTurnos();
   }, [navigate]);
 
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-cyan-50 p-8">
       <div className="container mx-auto max-w-[800px]">
         <h1 className="text-xl font-bold mb-4">Mis Turnos</h1>
-        {loading ? (
-          <p>Cargando turnos...</p>
-        ) : turnos.length > 0 ? (
-          <ul>
-            {turnos.map((turno) => (
-              <li key={turno.id} className="border p-4 mb-2 rounded-lg shadow">
-                <p>
-                  <strong>Doctor:</strong> {turno.doctor.name}
-                </p>
-                <p>
-                  <strong>Especialidad:</strong> {turno.doctor.specialty}
-                </p>
-                <p>
-                  <strong>Fecha:</strong>{" "}
-                  {new Date(turno.createdAt).toLocaleDateString()}
-                </p>
-              </li>
-            ))}
-          </ul>
+        {turnos.length === 0 ? (
+          <p>No hay turnos disponibles</p>
         ) : (
-          <p>No tienes turnos asignados.</p>
+          turnos.map((turno) => (
+            <div key={turno.id}>
+              <p>
+                <strong>Doctor:</strong> {turno.doctor.name}
+              </p>
+              <p>
+                <strong>Especialidad:</strong> {turno.doctor.specialty}
+              </p>
+              <p>
+                <strong>Fecha:</strong>{" "}
+                {new Date(turno.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+          ))
         )}
         <button
           className="btn bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium my-4"

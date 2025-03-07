@@ -9,7 +9,12 @@ export default function DoctorList({ newTurn, user }) {
   const [localDoctors, setLocalDoctors] = useState([]);
   const { doctors, setDoctors } = useTurnStore();
   const [message, setMessage] = useState("");
-  const [dni, setDni] = useState(localStorage.getItem("dni") || "");
+  const [dni, setDni] = useState(() => {
+    // Safely get DNI from localStorage only on client-side
+    return typeof window !== "undefined"
+      ? localStorage.getItem("dni") || ""
+      : "";
+  });
   const { updateDoctorTurn, broadcastRefresh } = useTurnStore();
   const [search, setSearch] = useState("");
   const navigate = useRouter();
@@ -62,6 +67,17 @@ export default function DoctorList({ newTurn, user }) {
     }
   }, [setDoctors]);
 
+  // Sync DNI with localStorage when it changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (dni) {
+        localStorage.setItem("dni", dni);
+      } else {
+        localStorage.removeItem("dni");
+      }
+    }
+  }, [dni]);
+
   const addTurn = async ({ doctor }) => {
     if (!doctor) return;
 
@@ -71,7 +87,10 @@ export default function DoctorList({ newTurn, user }) {
       return;
     }
 
-    const confirm = window.confirm("¿Desea agregar un turno para este doctor?");
+    const confirm =
+      typeof window !== "undefined"
+        ? window.confirm("¿Desea agregar un turno para este doctor?")
+        : false;
     if (!confirm) return;
 
     try {
@@ -89,11 +108,11 @@ export default function DoctorList({ newTurn, user }) {
       updateDoctorTurn(turnData.id, turnData.currentTurn);
       console.log("Broadcasting refresh event");
       broadcastRefresh(); // Broadcast refresh event
-      setDni("");
+      // setDni("");
+      navigate.push("/turnos/manage");
       toast.success(
         `Turno N°${turnData.currentTurn} para Dr. ${turnData.name} Agregado Correctamente`
       );
-      navigate.push("/turnos/manage");
     } catch (error) {
       console.error("Error getting turn:", error);
       setMessage("Error al obtener el turno");
@@ -135,7 +154,7 @@ export default function DoctorList({ newTurn, user }) {
           </label>
           <input
             type="text"
-            placeholder={dni != "" ? "Ingrese su DNI" : dni}
+            placeholder={dni !== "" ? "Ingrese su DNI" : dni}
             value={dni}
             onChange={(e) => setDni(e.target.value)}
             className="w-full border border-cyan-100 rounded-lg p-2 mb-2"
