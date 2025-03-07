@@ -9,10 +9,11 @@ const TurnosManage = () => {
 
   useEffect(() => {
     const fetchTurnos = async () => {
-      console.log('MANAGE')
+      console.log("MANAGE");
       // Safely check for localStorage
-      const dni = typeof window !== 'undefined' ? localStorage.getItem("dni") : null;
-      
+      const dni =
+        typeof window !== "undefined" ? localStorage.getItem("dni") : null;
+
       if (!dni) {
         navigate.push("/");
         return;
@@ -46,9 +47,12 @@ const TurnosManage = () => {
           <p>No hay turnos disponibles</p>
         ) : (
           turnos.map((turno) => (
-            <div key={turno.id}>
+            <div key={turno.id} className="mb-4 border border-cyan-100 p-4 rounded-lg">
               <p>
                 <strong>Doctor:</strong> {turno.doctor.name}
+              </p>
+              <p>
+                <strong>Turno N°:</strong> {turno.number}
               </p>
               <p>
                 <strong>Especialidad:</strong> {turno.doctor.specialty}

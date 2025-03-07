@@ -158,23 +158,30 @@ export default function DoctorList({ newTurn, user }) {
             value={dni}
             onChange={(e) => setDni(e.target.value)}
             className="w-full border border-cyan-100 rounded-lg p-2 mb-2"
+            disabled
           />
         </div>
       )}
       <h2 className="text-2xl font-semibold text-cyan-800 mb-6">
         {newTurn ? "Lista de Doctores" : "Doctores Disponibles"}
       </h2>
-      <label
-        htmlFor="search"
-        className="block text-sm font-medium text-cyan-800 mb-2"
-      >
-        Buscar Doctor
-      </label>
-      <input
-        type="search"
-        placeholder="Nombre"
-        className="border border-cyan-100 rounded-lg p-2 w-full"
-      />
+      <>
+        {newTurn && (
+          <>
+            <label
+              htmlFor="search"
+              className="block text-sm font-medium text-cyan-800 mb-2"
+            >
+              Buscar Doctor
+            </label>
+            <input
+              type="search"
+              placeholder="Nombre"
+              className="border border-cyan-100 rounded-lg p-2 w-full"
+            />
+          </>
+        )}
+      </>
       {localDoctors.length === 0 ? (
         <p className="text-gray-500 text-center">No hay doctores registrados</p>
       ) : (
@@ -192,7 +199,7 @@ export default function DoctorList({ newTurn, user }) {
               </div>
               <div className="text-right">
                 <span className="text-2xl font-bold text-cyan-700 mx-3">
-                  Turno N°:{" "}
+                  Turno Actual:{" "}
                   <span className="text-green-500">
                     {doctor.currentTurn || 0}
                   </span>

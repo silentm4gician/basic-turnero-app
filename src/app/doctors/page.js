@@ -6,7 +6,7 @@ import Link from "next/link";
 const DoctorsPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-cyan-50 p-8">
-      <div className="container mx-auto max-w-[1000px]">
+      <div className="container mx-auto max-w-[900px]">
         <div className="flex flex-col lg:flex-row justify-between items-center">
           <h1 className="text-4xl font-bold text-cyan-900">
             Policlínica Tafí Viejo
@@ -20,18 +20,12 @@ const DoctorsPage = () => {
 
         <div className="flex flex-col lg:flex-row justify-between items-center pb-8">
           <div className="flex gap-4 mt-8">
-            <Link
+            {/* <Link
               href="/doctors/manage"
               className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium flex items-center space-x-2"
             >
               Gestionar Doctores
-            </Link>
-            <Link
-              href="/turnos/nuevo"
-              className="btn bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg"
-            >
-              Dar Turnos
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
