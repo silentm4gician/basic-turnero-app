@@ -8,10 +8,32 @@ generator client {
 }
 
 model Doctor {
-  id           Int      @id @default(autoincrement())
-  name         String
-  specialty    String
-  currentTurn  Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String
+  specialty   String
+  currentTurn Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  Turn Turn[]
+}
+
+model Turn {
+  id        Int      @id @default(autoincrement())
+  doctorId  Int
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  number    Int //number of the current turn
+  patientId Int
+  patient   User  @relation(fields: [patientId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  dni       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Turn Turn[]
 }

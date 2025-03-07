@@ -1,16 +1,37 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
+// export async function GET() {
+//   try {
+//     const doctors = await prisma.doctor.findMany({
+//       orderBy: { name: 'asc' }
+//     })
+//     return NextResponse.json(doctors)
+//   } catch (error) {
+//     return NextResponse.json({ error: 'Error fetching doctors' }, { status: 500 })
+//   }
+// }
+
 export async function GET() {
   try {
-    const doctors = await prisma.doctor.findMany({
-      orderBy: { name: 'asc' }
-    })
-    return NextResponse.json(doctors)
+    // Obtener todos los doctores con sus turnos actuales
+    const doctores = await prisma.doctor.findMany({
+      include: {
+        Turn: {
+          orderBy: { createdAt: "asc" }, // Ordenar turnos por fecha
+          take: 1, // Solo el turno más reciente
+          include: { patient: true } // Incluir paciente en el turno actual
+        }
+      }
+    });
+
+    return NextResponse.json(doctores, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: 'Error fetching doctors' }, { status: 500 })
+    console.error("Error obteniendo doctores:", error);
+    return NextResponse.json({ error: "Error obteniendo doctores" }, { status: 500 });
   }
 }
+
 
 export async function POST(request) {
   try {
